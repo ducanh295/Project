@@ -1,0 +1,25 @@
+{
+    "folders": [
+        {
+            "path": "backend"
+        },
+        {
+            "path": "frontend"
+        }
+    ],
+    "launch": {
+        "configurations": [
+            {
+                "type": "java",
+                "name": "Spring Boot-ProjectApplication",
+                "request": "launch",
+                "cwd": "${workspaceFolder}/backend",
+                "mainClass": "com.bkap.ProjectApplication",
+                "projectName": "Project",
+                "args": "",
+                "envFile": "${workspaceFolder}/backend/.env"
+            }
+        ]
+    },
+    "settings": {}
+} 

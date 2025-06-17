@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm mới Danh mục con</title>
+</head>
+<body>
+<div layout:fragment="page_content">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>THÊM MỚI DANH MỤC CON</h1>
+                    </div>
+                     <div class="col-sm-6" style="text-align: right;">
+                        <a th:href="@{/admin/categories}" class="btn btn-secondary">Quay lại Danh sách</a>
+                    </div>
+                </div>
+                 <!-- Chỉ hiển thị lỗi chung (không phải lỗi field) ở đây -->
+                 <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <span th:text="${errorMessage}"></span>
+                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                 </div>
+                 <!-- KHỐI LỖI FIELD ĐÃ BỊ XÓA KHỎI ĐÂY -->
+
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card card-primary">
+                            <div class="card-header">
+                                <h3 class="card-title">Nhập thông tin danh mục con</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <form th:action="@{/admin/categories/them-moi}"
+                                  th:object="${category}" method="post">
+
+                                <div class="card-body">
+
+                                    <!-- **** DI CHUYỂN KHỐI HIỂN THỊ LỖI FIELD VÀO ĐÂY **** -->
+                                    <div th:if="${#fields.hasErrors('*')}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                                         <strong>Vui lòng sửa các lỗi sau:</strong>
+                                         <ul>
+                                             <li th:each="err : ${#fields.errors('*')}" th:text="${err}" />
+                                         </ul>
+                                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>
+                                     </div>
+                                    <!-- **** KẾT THÚC KHỐI LỖI FIELD **** -->
+
+
+                                    <!-- Trường Chọn Cha (Bắt buộc) -->
+                                    <div class="form-group">
+                                        <label for="parentId">Danh mục cha <span class="text-danger">*</span></label>
+                                        <select class="form-control" id="parentId" name="parentId" required
+                                                th:classappend="${#fields.hasErrors('parent')} ? 'is-invalid' : ''">
+                                            <option value="">--- Chọn danh mục cha ---</option>
+                                            <option th:each="p : ${potentialParents}"
+                                                    th:value="${p.categoryId}"
+                                                    th:text="${p.categoryName}"
+                                                    th:selected="${selectedParentId != null && #strings.equals(selectedParentId, p.categoryId)}">
+                                            </option>
+                                        </select>
+                                         <!-- Hiển thị lỗi cụ thể cho field parent (nếu có) -->
+                                         <div th:if="${#fields.hasErrors('parent')}" class="invalid-feedback" th:errors="*{parent}">Lỗi chọn cha</div>
+                                         <!-- Có thể bỏ div báo lỗi riêng ở đây nếu đã có báo lỗi chung -->
+                                    </div>
+
+                                    <!-- Tên Danh mục -->
+                                    <div class="form-group">
+                                        <label for="categoryName">Tên Danh mục con <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="categoryName" placeholder="Nhập tên danh mục con"
+                                               th:field="*{categoryName}" required
+                                               th:classappend="${#fields.hasErrors('categoryName')} ? 'is-invalid' : ''"/>
+                                        <!-- Hiển thị lỗi cụ thể cho field categoryName -->
+                                        <div th:if="${#fields.hasErrors('categoryName')}" class="invalid-feedback" th:errors="*{categoryName}">Lỗi tên danh mục</div>
+                                    </div>
+
+                                    <!-- Trạng thái -->
+                                    <div class="form-group">
+                                        <label>Trạng thái</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="statusTrue" value="true" th:field="*{status}" th:checked="${category.status == null or category.status == true}">
+                                            <label class="form-check-label" for="statusTrue">Còn hàng</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" id="statusFalse" value="false" th:field="*{status}" th:checked="${category.status == false}">
+                                            <label class="form-check-label" for="statusFalse">Hết hàng</label>
+                                        </div>
+                                         <!-- Hiển thị lỗi cụ thể cho field status (nếu có) -->
+                                         <div th:if="${#fields.hasErrors('status')}" class="invalid-feedback d-block" th:errors="*{status}">Lỗi trạng thái</div>
+                                    </div>
+
+                                </div>
+                                <!-- /.card-body -->
+
+                                <div class="card-footer">
+                                    <button type="submit" class="btn btn-primary">Thêm mới</button>
+                                    <a th:href="@{/admin/categories}" class="btn btn-secondary">Hủy</a>
+                                </div>
+                            </form>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+</div>
+</body>
+</html>

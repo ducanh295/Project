@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultrap.net.nz/thymeleaf/layout"
+	layout:decorate="~{admin_layout}">
+<head>
+<meta charset="UTF-8">
+<title>Quản lý sản phẩm</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+</head>
+<body>
+	<div layout:fragment="page_content">
+		<!-- Content Wrapper. Contains page content -->
+		<div class="content-wrapper">
+			<section class="content">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-12">
+							<!-- Default box -->
+							<div class="card">
+								<div class="card-header">
+									<h2 class="mt-2">DANH SÁCH SẢN PHẨM</h2>
+								</div>
+								<div class="card-body">
+
+									<div class="container-fluid">
+									<div style="text-align: left;">
+                         				<a th:href="@{/admin/categories/them-moi}" class="btn btn-primary">Thêm mới Danh mục con</a>
+                   					 </div>
+
+										<table class="table table-bordered mt-2">
+											<thead>
+												<!-- Nên dùng thead cho tiêu đề -->
+												<tr>
+													<th>Mã số</th>
+													<th>Tên danh mục</th>
+													<th>Trạng thái</th>
+													<th>Thao tác</th>
+													<!-- Đổi tên cột cho rõ ràng -->
+												</tr>
+											</thead>
+											<tbody>
+												<!-- Lặp qua tất cả danh mục để tìm danh mục gốc -->
+												<th:block th:each="p : ${categories}">
+													<!-- Chỉ xử lý nếu đây là danh mục gốc (đối tượng parent là null) -->
+													<th:block th:if="${p.parent == null}">
+														<!-- Hàng cho danh mục cha -->
+														<tr style="background-color: #f0f0f0;">
+															<td th:text="${p.categoryId}"></td>
+															<td th:text="${p.categoryName}"
+																style="font-weight: bold;"></td>
+															<td th:text="${p.status ? 'Còn hàng' : 'Hết hàng'}"></td>
+															<td>
+																<!-- Các nút thao tác cho cha --> <a
+																th:href="@{/admin/categories/xoa/{id}(id=${p.categoryId})}"
+																th:onclick="'return confirm(\'Bạn có chắc muốn xóa danh mục cha \\'[' + ${p.categoryName} + ']\\' và TẤT CẢ danh mục con không?\');'"
+																class="btn btn-danger btn-sm">Xóa</a> <a
+																th:href="@{/admin/categories/chi-tiet/{id}(id=${p.categoryId})}"
+																class="btn btn-success btn-sm">Chi tiết</a>
+															</td>
+														</tr>
+
+														<!-- Bây giờ, lặp trực tiếp qua danh sách subcategories của cha 'p' này -->
+														<tr th:each="c : ${p.subcategories}">
+															<!-- Hàng cho danh mục con -->
+															<td th:text="${c.categoryId}"></td>
+															<td>
+																<!-- Thụt lề tên danh mục con --> <span
+																style="padding-left: 25px;" th:text="${c.categoryName}"></span>
+															</td>
+															<td th:text="${c.status ? 'Còn hàng' : 'Hết hàng'}"></td>
+															<td>
+																<!-- Các nút thao tác cho con --> <a
+																th:href="@{/admin/categories/xoa/{id}(id=${c.categoryId})}"
+																th:onclick="'return confirm(\'Bạn có chắc muốn xóa danh mục \\'[' + ${c.categoryName} + ']\\' không?\');'"
+																class="btn btn-danger btn-sm">Xóa</a> <a
+																th:href="@{/admin/categories/sua/{id}(id=${c.categoryId})}"
+																class="btn btn-info btn-sm">Sửa</a> <a
+																th:href="@{/admin/categories/chi-tiet/{id}(id=${c.categoryId})}"
+																class="btn btn-success btn-sm">Chi tiết</a>
+															</td>
+														</tr>
+													</th:block>
+													<!-- Kết thúc if parent == null -->
+												</th:block>
+												<!-- Kết thúc vòng lặp chính -->
+
+												<!-- Tùy chọn: Xử lý trường hợp danh sách trống hoặc không có danh mục gốc -->
+												<tr
+													th:if="${#lists.isEmpty(categories) OR categories.?[parent == null].empty}">
+													<td colspan="4" class="text-center">Không có danh mục
+														gốc nào để hiển thị.</td>
+												</tr>
+											</tbody>
+										</table>
+
+									</div>
+								</div>
+								<!-- /.card -->
+							</div>
+						</div>
+					</div>
+			</section>
+		</div>
+	</div>
+</body>
+</html>

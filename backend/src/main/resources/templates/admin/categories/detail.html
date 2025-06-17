@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin_layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi tiết Danh mục</title>
+</head>
+<body>
+<div layout:fragment="page_content">
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1>CHI TIẾT DANH MỤC</h1>
+                    </div>
+                     <div class="col-sm-6" style="text-align: right;">
+                        <a th:href="@{/admin/categories}" class="btn btn-secondary">Quay lại Danh sách</a>
+                     </div>
+                </div>
+                 <!-- Flash messages nếu cần -->
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card card-primary card-outline">
+                             <div class="card-header">
+                                <h3 class="card-title" th:text="${category.categoryName}"></h3>
+                            </div>
+                            <div class="card-body">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Mã số</dt>
+                                    <dd class="col-sm-8" th:text="${category.categoryId}"></dd>
+
+                                    <dt class="col-sm-4">Tên Danh Mục</dt>
+                                    <dd class="col-sm-8" th:text="${category.categoryName}"></dd>
+
+                                    <dt class="col-sm-4">Trạng thái</dt>
+                                    <dd class="col-sm-8" th:text="${category.status ? 'Còn hàng' : 'Hết hàng'}"></dd>
+
+                                    <!-- Hiển thị Cha (Nếu là Con) -->
+                                    <th:block th:if="${category.parent != null}">
+                                        <dt class="col-sm-4">Thuộc Danh mục cha</dt>
+                                        <dd class="col-sm-8">
+                                             <a th:href="@{/admin/categories/chi-tiet/{id}(id=${category.parent.categoryId})}" th:text="${category.parent.categoryName}"></a>
+                                        </dd>
+                                    </th:block>
+                                </dl>
+
+                                <!-- Hiển thị Danh sách Con (Nếu là Cha) -->
+                                <th:block th:if="${category.parent == null and !#lists.isEmpty(category.subcategories)}">
+                                    <hr>
+                                    <h4>Danh mục con trực thuộc</h4>
+                                    <table class="table table-sm table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Tên Con</th>
+                                                <th>Trạng thái</th>
+                                                <th>Thao tác</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="sub : ${category.subcategories}">
+                                                <td th:text="${sub.categoryId}"></td>
+                                                <td th:text="${sub.categoryName}"></td>
+                                                <td th:text="${sub.status ? 'Còn hàng' : 'Hết hàng'}"></td>
+                                                <td>
+                                                    <a th:href="@{/admin/categories/chi-tiet/{id}(id=${sub.categoryId})}" class="btn btn-xs btn-success">Chi tiết</a>
+                                                    <a th:href="@{/admin/categories/sua/{id}(id=${sub.categoryId})}" class="btn btn-xs btn-info">Sửa</a>
+                                                     <a th:href="@{/admin/categories/xoa/{id}(id=${sub.categoryId})}"
+                                                       th:onclick="'return confirm(\'Bạn chắc chắn muốn xóa danh mục \\'[' + ${sub.categoryName} + ']\\' không?\');'"
+                                                       class="btn btn-xs btn-danger">Xóa</a>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </th:block>
+                                 <th:block th:if="${category.parent == null and #lists.isEmpty(category.subcategories)}">
+                                     <hr>
+                                     <p><em>Danh mục này không có danh mục con.</em></p>
+                                 </th:block>
+
+                            </div>
+                            <!-- /.card-body -->
+                             <div class="card-footer">
+                                 <a th:href="@{/admin/categories}" class="btn btn-secondary">Quay lại</a>
+                                 <!-- Nút sửa cho con -->
+                                <a th:if="${category.parent != null}" th:href="@{/admin/categories/sua/{id}(id=${category.categoryId})}" class="btn btn-info">Sửa Danh mục này</a>
+                                <!-- Nút xóa -->
+                                 <a th:if="${category.parent == null}" th:href="@{/admin/categories/xoa/{id}(id=${category.categoryId})}"
+                                    th:onclick="'return confirm(\'Bạn chắc chắn muốn xóa danh mục cha \\'[' + ${category.categoryName} + ']\\' và TẤT CẢ danh mục con không?\');'"
+                                    class="btn btn-danger float-right">Xóa Danh mục cha & Con</a>
+                                <a th:if="${category.parent != null}" th:href="@{/admin/categories/xoa/{id}(id=${category.categoryId})}"
+                                    th:onclick="'return confirm(\'Bạn chắc chắn muốn xóa danh mục \\'[' + ${category.categoryName} + ']\\' không?\');'"
+                                    class="btn btn-danger float-right">Xóa Danh mục này</a>
+                            </div>
+                        </div>
+                        <!-- /.card -->
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- /.content -->
+    </div>
+    <!-- /.content-wrapper -->
+</div>
+</body>
+</html>

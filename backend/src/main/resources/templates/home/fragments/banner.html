@@ -1,0 +1,26 @@
+<div th:fragment="banner">
+	<div class="header__container" id="home">
+		<h1 >PREMIUM CAR RENTAL</h1>
+		<form action="/">
+			<div class="input__group">
+				<label for="location">Pick up & Return location</label> <input
+					type="text" name="location" id="location"
+					placeholder="Dallas, Texas" />
+			</div>
+			<div class="input__group">
+				<label for="start">Start</label> <input type="text" name="start"
+					id="start" placeholder="Aug 16, 10:00 AM" />
+			</div>
+			<div class="input__group">
+				<label for="stop">Stop</label> <input type="text" name="stop"
+					id="stop" placeholder="Aug 18, 10:00 PM" />
+			</div>
+			<button class="btn">
+				<i class="ri-search-line"></i>
+			</button>
+		</form>
+		<img src="assets/images/header.png" alt="header" />
+	</div>
+	<a href="#about" class="scroll__down"> <i
+		class="ri-arrow-down-line"></i></a>
+</div>

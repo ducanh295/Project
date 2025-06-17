@@ -1,0 +1,259 @@
+</html><!DOCTYPE html>
+<html xmlns:layout="http://www.ultrap.net.nz/thymeleaf/layout" layout:decorate="~{home_layout}">
+<head>
+<meta charset="UTF-8">
+<title>Shoping cart</title>
+</head>
+<body>
+
+<div layout:fragment="optional_navbar" style="background-color: #fff;">
+		<nav>
+			<div class="nav__header">
+				<div class="nav__logo">
+					<a th:href="@{/}">RENTAL</a>
+				</div>
+				<div class="nav__menu__btn" id="menu-btn">
+					<i class="ri-menu-line"></i>
+				</div>
+			</div>
+			<ul class="nav__links" id="nav-links">
+				<li><a th:href="@{/}">Home</a></li>
+				<li><a th:href="@{/shop}">Shop</a></li>
+				<li><a th:href="@{/shop}">About</a></li>
+				<li><a th:href="@{/shop}">Contact</a></li>
+			</ul>
+			<div class="nav__btn">
+				<div class="site-header__login">
+					<button type="button" class="search-trigger" style="color: #000;">
+						<i class="icon anm anm-user-circle-o"></i>
+					</button>
+				</div>
+				<div class="site-cart">
+					<a href="#;" class="site-header__cart" title="Cart"> <i
+						class="icon anm anm-bag-l"></i> <span id="CartCount"
+						class="site-header__cart-count" data-cart-render="item_count">2</span>
+					</a>
+					<!--Minicart Popup-->
+					<div id="header-cart" class="block block-cart">
+						<ul class="mini-products-list">
+							<li class="item"><a class="product-image" href="#"> <img
+									src="assets/images/product-images/cape-dress-1.jpg"
+									alt="3/4 Sleeve Kimono Dress" title="" />
+							</a>
+								<div class="product-details">
+									<a href="#" class="remove"><i class="anm anm-times-l"
+										aria-hidden="true"></i></a> <a href="#" class="edit-i remove"><i
+										class="anm anm-edit" aria-hidden="true"></i></a> <a class="pName"
+										href="cart.html">Sleeve Kimono Dress</a>
+									<div class="variant-cart">Black / XL</div>
+									<div class="wrapQtyBtn">
+										<div class="qtyField">
+											<span class="label">Qty:</span> <a class="qtyBtn minus"
+												href="javascript:void(0);"><i class="fa anm anm-minus-r"
+												aria-hidden="true"></i></a> <input type="text" id="Quantity"
+												name="quantity" value="1" class="product-form__input qty">
+											<a class="qtyBtn plus" href="javascript:void(0);"><i
+												class="fa anm anm-plus-r" aria-hidden="true"></i></a>
+										</div>
+									</div>
+									<div class="priceRow">
+										<div class="product-price">
+											<span class="money">$59.00</span>
+										</div>
+									</div>
+								</div></li>
+							<li class="item"><a class="product-image" href="#"> <img
+									src="assets/images/product-images/cape-dress-2.jpg"
+									alt="Elastic Waist Dress - Black / Small" title="" />
+							</a>
+								<div class="product-details">
+									<a href="#" class="remove"><i class="anm anm-times-l"
+										aria-hidden="true"></i></a> <a href="#" class="edit-i remove"><i
+										class="anm anm-edit" aria-hidden="true"></i></a> <a class="pName"
+										href="cart.html">Elastic Waist Dress</a>
+									<div class="variant-cart">Gray / XXL</div>
+									<div class="wrapQtyBtn">
+										<div class="qtyField">
+											<span class="label">Qty:</span> <a class="qtyBtn minus"
+												href="javascript:void(0);"><i class="fa anm anm-minus-r"
+												aria-hidden="true"></i></a> <input type="text" id="Quantity"
+												name="quantity" value="1" class="product-form__input qty">
+											<a class="qtyBtn plus" href="javascript:void(0);"><i
+												class="fa anm anm-plus-r" aria-hidden="true"></i></a>
+										</div>
+									</div>
+									<div class="priceRow">
+										<div class="product-price">
+											<span class="money">$99.00</span>
+										</div>
+									</div>
+								</div></li>
+						</ul>
+						<div class="total">
+							<div class="total-in">
+								<span class="label">Cart Subtotal:</span><span
+									class="product-price"><span class="money">$748.00</span></span>
+							</div>
+							<div class="buttonSet text-center">
+								<a href="cart.html" class="btn btn-secondary btn--small">View
+									Cart</a> <a href="checkout.html"
+									class="btn btn-secondary btn--small">Checkout</a>
+							</div>
+						</div>
+					</div>
+					<!--End Minicart Popup-->
+				</div>
+
+			</div>
+
+		</nav>
+	</div>
+	<div layout:fragment="optional_banner">
+		<div class="collection-header">
+			<div class="collection-hero">
+				
+			</div>
+		</div>
+	</div>	
+
+<div layout:fragment="page_content" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<div id="page-content">
+    	<!--Page Title-->
+    	<div class="page section-header text-center">
+			<div class="page-title">
+        		<div class="wrapper"><h1 class="page-width">Your cart</h1><span style="color:blue" th:text="${msg}"></span></div>
+      		</div>
+		</div>
+        <!--End Page Title-->
+        
+        <div class="container">
+        	<div class="row">
+                <div class="col-12 col-sm-12 col-md-8 col-lg-8 main-col">
+                	<form action="/updateCart" method="post" class="cart style2">
+                		<table>
+                            <thead class="cart__row cart__header">
+                                <tr>
+                                    <th colspan="2" class="text-center">Product</th>
+                                    <th class="text-center">Price</th>
+                                    <th class="text-center">Quantity</th>
+                                    <th class="text-right">Total</th>
+                                    <th class="action">&nbsp;</th>
+                                </tr>
+                            </thead>
+                    		<tbody>
+                                <tr class="cart__row border-bottom line1 cart-flex border-top" th:each="item:${cartitems}" th:object="${item}">
+                                <input type="hidden" name="productids[]" th:value="*{productId}"/>
+                                    <td class="cart__image-wrapper cart-flex-item">
+                                        <a href="#"><img class="cart__image" th:src="*{picture}" th:alt="*{productName}"></a>
+                                    </td>
+                                    <td class="cart__meta small--text-left cart-flex-item">
+                                        <div class="list-view-item__title">
+                                            <a href="#" th:text="*{productName}">Elastic Waist Dress </a>
+                                        </div>
+                                        
+                                        <div class="cart__meta-text">
+                                            Color: <span th:text="*{color}"></span><br>Size: <span th:text="*{size}"></span><br>
+                                        </div>
+                                    </td>
+                                    <td class="cart__price-wrapper cart-flex-item">
+                                        $<span class="money" th:text="*{price}">$735.00</span>
+                                    </td>
+                                    <td class="cart__update-wrapper cart-flex-item text-right">
+                                        <div class="cart__qty text-center">
+                                            <div class="qtyField">
+                                                <a class="qtyBtn minus" href="javascript:void(0);"><i class="icon icon-minus"></i></a>
+                                                <input class="cart__qty-input qty" type="text" name="quantities[]" id="qty" th:value="*{quantity}" pattern="[0-9]*">
+                                                <a class="qtyBtn plus" href="javascript:void(0);"><i class="icon icon-plus"></i></a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-right small--hide cart-price">
+                                        <div>$<span class="money" th:text="*{total}">$735.00</span></div>
+                                    </td>
+                                    <td class="text-center small--hide"><a href="#" onclick="return confirm('Bạn có muốn xóa không?')" th:href="@{/removeCart/{id}(id=${item.productId})}" class="btn btn--secondary cart__remove" title="Remove tem"><i class="icon icon anm anm-times-l"></i></a></td>
+                                </tr>
+                                
+                            </tbody>
+                    		<tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-left"><a href="/shop" class="btn--link cart-continue"><i class="icon icon-arrow-circle-left"></i> Continue shopping</a></td>
+                                    <td colspan="3" class="text-right"><button type="submit" name="update" class="btn btn-primary cart-update"><i class="fa fa-refresh"></i> Update</button></td>
+                                </tr>
+                            </tfoot>
+                    </table>
+                    
+                   
+                    
+                    </form>                   
+               	</div>
+                <div class="col-12 col-sm-12 col-md-4 col-lg-4 cart__footer">
+                <form action="/checkout" method="post">
+							<div class="cart-note">
+								<div sec:authorize="isAuthenticated()" th:remove="tag">
+									<div class="solid-border">
+										<h3>INFORMATION RECEIVER</h3>
+										<label>FullName</label><input type="text"
+											th:value="${#authentication.principal.fullName}"
+											name="receiveName" /> <label>Address</label><input
+											type="text" th:value="${#authentication.principal.address}"
+											name="receiveAddress" /> <label>Phone</label><input
+											type="text" th:value="${#authentication.principal.phone}"
+											name="receivePhone" /> <label>Note</label><input type="text"
+											name="note" />
+									</div>
+
+									<div class="solid-border">
+										<div class="row">
+											<span class="col-12 col-sm-6 cart__subtotal-title"><strong>Subtotal</strong></span>
+											<span
+												class="col-12 col-sm-6 cart__subtotal-title cart__subtotal text-right">$<span
+												class="money" th:text="${totalCart}"></span></span>
+										</div>
+										<div class="cart__shipping">Shipping &amp; taxes
+											calculated at checkout</div>
+										<p class="cart_tearm">
+											<label> <input type="checkbox" name="tearm"
+												id="cartTearm" class="checkbox" value="tearm" required="">
+												I agree with the terms and conditions
+											</label>
+										</p>
+										<input type="submit" name="checkout" id="cartCheckout"
+											class="btn btn--small-wide checkout" value="Checkout">
+										<div class="paymnet-img">
+											<img src="/assets/images/payment-img.jpg" alt="Payment">
+										</div>
+									</div>
+								</div>
+								<div sec:authorize="isAnonymous()" th:remove="tag">
+								<div class="solid-border">
+										<div class="row">
+											<span class="col-12 col-sm-6 cart__subtotal-title"><strong>Subtotal</strong></span>
+											<span
+												class="col-12 col-sm-6 cart__subtotal-title cart__subtotal text-right">$<span
+												class="money" th:text="${totalCart}"></span></span>
+										</div>
+										<div class="cart__shipping">Shipping &amp; taxes
+											calculated at checkout</div>
+										<p class="cart_tearm">
+											<label> <input type="checkbox" name="tearm"
+												id="cartTearm" class="checkbox" value="tearm" required="">
+												I agree with the terms and conditions
+											</label>
+										</p>
+										<a href="/login" id="cartCheckout"
+											class="btn btn--small-wide checkout" >Checkout</a>
+										<div class="paymnet-img">
+											<img src="assets/images/payment-img.jpg" alt="Payment">
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+</body>
+</html>

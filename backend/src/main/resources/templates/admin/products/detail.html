@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Chi tiết sản phẩm</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" />
+</head>
+<body>
+	<div class="container">
+		<h2 class="mt-2">Chi tiết sản phẩm</h2>
+		<div th:object="${product}">
+			<p>
+				ID sản phẩm: <span th:text="*{productId}"></span>
+				<hr>
+				Tên sản phẩm: <span th:text="*{productName}"></span>
+				<hr>
+				Giá gốc: <span th:text="*{priceOld}"></span>
+				<hr>
+				giá mới: <span th:text="*{price}"></span>
+				<hr>
+				Màu: <span th:text="*{colors}"></span>
+				<hr>
+				Kích thước: <span th:text="*{sizes}"></span>
+				<hr>
+				Ảnh: <span th:text="*{pictures}"></span>
+				<hr>
+				Mô tả ngắn: <span th:text="*{brief}"></span>
+				<hr>
+				Mô tả dài: <span th:text="*{description}"></span>
+				<hr>
+				Trạng thái: <span th:text="*{status?'Còn hàng':'Hết hàng'}"></span>
+			</p>
+		</div>
+	</div>
+
+</body>
+</html>

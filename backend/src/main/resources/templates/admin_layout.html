@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">	
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">CAR
+	STORE</title>
+<meta name="description" content="description">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" th:href="@{/assets/plugins/fontawesome-free/css/all.min.css}">
+<link rel="stylesheet" th:href="@{/assets/plugins/overlayScrollbars/css/OverlayScrollbars.min.css}">
+<link rel="stylesheet" th:href="@{/assets/dist/css/adminlte.min.css}">
+</head>
+<body>
+
+	<!-- Header -->
+	<div class="header_nav">
+		 <div layout:fragment="optional_navbar">
+			<div th:replace="~{admin/fragments/navbar::navbar}">Menu logo</div>
+		</div>
+		<div th:replace="~{admin/fragments/side_bar::side_bar}">side bar</div>
+	</div>
+	<!-- End Header -->
+	
+	<!-- Content -->
+	<div id="page-content" layout:fragment="page_content">Nội dung</div>
+	<!-- End Content -->
+	
+	<script th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+	<!-- Bootstrap 4 -->
+	<script th:src="@{/assets/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+	<!-- overlayScrollbars -->
+	<script
+		th:src="@{/assets/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js}"></script>
+	<!-- AdminLTE App -->
+	<script th:src="@{/assets/dist/js/adminlte.min.js}"></script>
+	<!-- AdminLTE for demo purposes -->
+	<script th:src="@{/assets/dist/js/demo.js}"></script>
+</body>
+</html>

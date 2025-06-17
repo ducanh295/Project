@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="UTF-8">
+    <title>Thêm mới sản phẩm</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Thêm mới sản phẩm</h1>
+        
+        <form th:action="@{/admin/products/ghi}" th:object="${product}" method="post" enctype="multipart/form-data" >
+             <div class="form-group">
+                <label for="productId">ID sản phẩm</label>
+                <input type="text" class="form-control" id="productId" th:field="*{productId}" />
+                <div th:if="${#fields.hasErrors('productId')}" class="text-danger">
+                    <ul th:errors="*{productId}"></ul>
+                </div>
+            </div>
+            <!-- Product Name -->
+            <div class="form-group">
+                <label for="productName">Tên sản phẩm</label>
+                <input type="text" class="form-control" id="productName" th:field="*{productName}" />
+                <div th:if="${#fields.hasErrors('productName')}" class="text-danger">
+                    <ul th:errors="*{productName}"></ul>
+                </div>
+            </div>
+            
+            <!-- Price -->
+            <div class="form-group">
+                <label for="price">Giá cũ</label>
+                <input type="number" class="form-control" id="priceOld" th:field="*{priceOld}" step="0.01" />
+                <div th:if="${#fields.hasErrors('priceOld')}" class="text-danger">
+                    <ul th:errors="*{priceOld}"></ul>
+                </div>
+            </div>
+            
+            <!-- Brand -->
+            <div class="form-group">
+                <label for="brand">giá mới</label>
+                <input type="text" class="form-control" id="price" th:field="*{price}" />
+                <div th:if="${#fields.hasErrors('price')}" class="text-danger">
+                    <ul th:errors="*{price}"></ul>
+                </div>
+            </div>
+            <div class="form-group row">
+				<label class="col-sm-2 col-form-label" for="file">Ảnh:</label>
+				<div class="col-sm-10">
+					<input type="file" name="file" class="form-control"
+						accept=" images/*" />
+				</div>
+			</div>
+            
+            <!-- Description -->
+            <div class="form-group">
+                <label for="description">Mô tả</label>
+                <textarea class="form-control" id="description" th:field="*{description}"></textarea>
+                <div th:if="${#fields.hasErrors('description')}" class="text-danger">
+                    <ul th:errors="*{description}"></ul>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="categorySelect">Danh mục</label>
+                <select class="form-control" id="categorySelect" th:field="*{category}">
+                    <option value="">-- Chọn Danh Mục --</option>
+                    <!-- Lặp qua danh sách 'categories' được truyền từ Controller -->
+                    <option th:each="cat : ${categories}" th:value="${cat.categoryId}"  th:text="${cat.categoryName}"></option>
+                </select>
+                 <!-- Hiển thị lỗi validation cho category (nếu category là bắt buộc) -->
+                <div th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="text-danger small"></div>
+            </div>
+            <!-- Active -->
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="status" th:field="*{status}" />
+                <label class="form-check-label" for="status">Còn hàng</label>
+            </div>
+            
+            <button type="submit" class="btn btn-primary"> Lưu </button>
+        </form>
+    </div>
+
+</body>
+</html>

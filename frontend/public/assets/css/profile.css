@@ -1,0 +1,272 @@
+        .profile-container {
+            background-color: #fff;
+            width: 100vw; /* Chiếm toàn bộ chiều rộng viewport */
+            min-height: 100vh; /* Thay đổi từ height: 100vh; để cho phép mở rộng */
+            display: flex;
+            overflow: auto; /* Thay đổi từ overflow: hidden; để cho phép cuộn toàn trang */
+            animation: fadeIn 0.6s ease-out;
+            /* Không cần padding ở đây nữa, sẽ quản lý bên trong các section */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Phần Avatar bên trái */
+        .profile-avatar-section {
+            background-color: #0077b6;
+            color: #fff;
+            width: 30%; /* Điều chỉnh tỷ lệ nếu cần */
+            min-width: 300px; /* Đảm bảo không quá hẹp trên màn hình lớn */
+            padding: 40px 20px; /* Tăng padding để cân đối hơn */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Căn giữa theo chiều dọc */
+            text-align: center;
+            box-sizing: border-box; /* Để padding không làm tăng width */
+        }
+
+        #imagePreview {
+            width: 200px; /* Tăng kích thước ảnh một chút */
+            height: 260px;
+            object-fit: cover;
+            border: 6px solid rgba(255, 255, 255, 0.8); /* Viền trắng mờ hơn */
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+            margin-bottom: 25px;
+            cursor: pointer;
+            background-color: #cadde2;
+        }
+        #imagePreview[src="#"], #imagePreview:not([src]) {
+             content: '';
+        }
+
+        .custom-file-upload {
+            display: inline-block;
+            padding: 12px 25px;
+            cursor: pointer;
+            background-color: #fff;
+            color: #0077b6;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border: 1px solid #0077b6;
+            margin-bottom: 15px; /* Thêm khoảng cách */
+        }
+        .custom-file-upload:hover {
+            background-color: #f0f0f0;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .avatar-name-placeholder {
+            font-size: 22px;
+            font-weight: 500;
+            margin-top: 10px;
+            max-width: 90%; /* Tránh tràn chữ */
+            word-break: break-word;
+        }
+
+
+        /* Phần thông tin bên phải */
+        .profile-info-section {
+            flex: 1; /* Chiếm phần còn lại của không gian */
+            padding: 20px; /* Thêm padding cho nội dung */
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            height: auto; /* Đảm bảo chiều cao tự động co giãn theo nội dung */
+        }
+
+        .profile-info-section h2 {
+            color: #005f8f;
+            margin-top: 0;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 28px;
+        }
+
+        .form-row { /* Tạo các hàng cho form để dễ căn chỉnh */
+            display: flex;
+            gap: 20px; /* Khoảng cách giữa các input trên cùng hàng */
+            margin-bottom: 20px;
+        }
+        .form-row .form-group {
+            flex: 1; /* Các form-group trong row sẽ chia đều không gian */
+            margin-bottom: 0; /* Bỏ margin-bottom của form-group khi trong row */
+        }
+        /* Nếu chỉ có 1 item trong row thì nó sẽ chiếm toàn bộ */
+
+
+        .form-group {
+            margin-bottom: 20px; /* Điều chỉnh lại nếu cần */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 16px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            color: #222;
+            background-color: #fdfdfd;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="date"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #0077b6;
+            box-shadow: 0 0 0 0.2rem rgba(0, 119, 182, 0.2);
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group label,
+        .checkbox-group label {
+            font-weight: 400;
+            display: inline-flex;
+            align-items: center;
+            margin-right: 20px;
+            color: #444;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .radio-group input[type="radio"],
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .button-group {
+            text-align: right;
+            margin-top: 30px;
+        }
+
+        button[type="submit"],
+        button[type="reset"] {
+            background-color: #0077b6;
+            color: white;
+            padding: 12px 28px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 500;
+            margin-left: 12px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button[type="reset"] {
+            background-color: #6c757d;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #005f8f;
+            transform: translateY(-2px);
+        }
+        button[type="reset"]:hover {
+            background-color: #545b62;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive cho màn hình nhỏ hơn */
+        @media (max-width: 992px) { /* Điều chỉnh breakpoint nếu cần */
+            .profile-container {
+                flex-direction: column;
+                height: auto; /* Cho phép chiều cao tự động điều chỉnh theo nội dung */
+                min-height: 100vh; /* Vẫn đảm bảo ít nhất full viewport height */
+            }
+            .profile-avatar-section {
+                width: 100%;
+                min-width: unset;
+                padding: 30px 20px;
+                height: auto; /* Chiều cao tự động */
+            }
+            .profile-info-section {
+                width: 100%;
+                padding: 30px;
+                /* overflow-y: visible; /* Không cần scroll khi đã là 1 cột */
+                /* height: auto; */
+            }
+            #imagePreview {
+                width: 160px;
+                height: 210px;
+            }
+            .form-row {
+                flex-direction: column; /* Input trên hàng sẽ xếp chồng lên nhau */
+                gap: 0; /* Bỏ gap khi xếp chồng */
+            }
+            .form-row .form-group {
+                margin-bottom: 20px; /* Thêm lại margin khi xếp chồng */
+            }
+            .profile-info-section h2 {
+                text-align: center;
+            }
+            .button-group {
+                text-align: center;
+            }
+             button[type="submit"],
+             button[type="reset"] {
+                width: 48%;
+                margin: 5px 1%;
+            }
+        }
+        @media (max-width: 576px) {
+            .profile-info-section {
+                padding: 20px;
+            }
+            .profile-info-section h2 {
+                font-size: 24px;
+            }
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            input[type="date"],
+            select,
+            textarea {
+                font-size: 15px;
+                padding: 10px 12px;
+            }
+            .custom-file-upload {
+                padding: 10px 20px;
+                font-size: 15px;
+            }
+            button[type="submit"],
+            button[type="reset"] {
+                font-size: 16px;
+                padding: 10px 20px;
+                width: 100%;
+                margin: 10px 0 0 0;
+            }
+             button[type="reset"]{
+                margin-left: 0;
+            }
+        }
