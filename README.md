@@ -113,145 +113,279 @@ frontend/src/
    - Sử dụng axios để gọi API
    - Được tổ chức theo resource
 
-## Luồng Hoạt Động Chi Tiết
+## Luồng Xử Lý Chi Tiết
 
-### 1. Đăng Nhập/Đăng Ký
-
-#### Frontend
-1. User nhập thông tin đăng nhập/đăng ký
-2. Form validation được thực hiện bởi React
-3. Gọi API thông qua service:
-```javascript
-// services/authService.js
-const login = async (credentials) => {
-  const response = await axios.post('/api/auth/login', credentials);
-  return response.data;
-};
+### 1. Luồng Đăng Nhập
+```
+[Frontend]                    [Backend]
+     |                            |
+     |-- 1. Người dùng nhập      |
+     |   email và mật khẩu       |
+     |   vào form đăng nhập      |
+     |                          |
+     |-- 2. Frontend kiểm tra    |
+     |   tính hợp lệ của dữ liệu |
+     |   (email phải đúng định   |
+     |   dạng, mật khẩu phải    |
+     |   có độ dài tối thiểu)    |
+     |                          |
+     |-- 3. Gửi request POST    |
+     |   đến /api/auth/login    |
+     |   với dữ liệu đăng nhập  |
+     |                          |
+     |                          |-- 4. AuthController nhận
+     |                          |   request và chuyển đến
+     |                          |   AuthService
+     |                          |
+     |                          |-- 5. AuthService kiểm tra:
+     |                          |   - Tìm user trong database
+     |                          |   - So sánh mật khẩu đã mã hóa
+     |                          |   - Tạo JWT token nếu hợp lệ
+     |                          |
+     |                          |-- 6. Nếu đăng nhập thành công:
+     |                          |   - Tạo JWT token chứa thông tin
+     |                          |     user (id, role, etc.)
+     |                          |   - Token có thời hạn 24 giờ
+     |                          |
+     |<-- 7. Trả về response    |
+     |   chứa:                   |
+     |   - JWT token            |
+     |   - Thông tin user       |
+     |   - Thông báo thành công |
+     |                          |
+     |-- 8. Frontend lưu token  |
+     |   vào localStorage để    |
+     |   sử dụng cho các request|
+     |   tiếp theo              |
+     |                          |
+     |-- 9. Chuyển hướng người  |
+     |   dùng đến trang chủ     |
+     |   và hiển thị thông báo  |
+     |   đăng nhập thành công   |
 ```
 
-#### Backend
-1. Controller nhận request:
-```java
-@PostMapping("/login")
-public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
-    // Xử lý đăng nhập
-}
+### 2. Luồng Xem Sản Phẩm
+```
+[Frontend]                    [Backend]
+     |                            |
+     |-- 1. Khi trang sản phẩm   |
+     |   được tải, component     |
+     |   ProductList được khởi   |
+     |   tạo                     |
+     |                          |
+     |-- 2. Component gọi hook   |
+     |   useProducts() để lấy    |
+     |   danh sách sản phẩm      |
+     |                          |
+     |-- 3. Hook gửi request GET |
+     |   đến /api/products với   |
+     |   các tham số:           |
+     |   - page: số trang       |
+     |   - size: số sản phẩm/trang|
+     |   - sort: sắp xếp        |
+     |                          |
+     |                          |-- 4. ProductController nhận
+     |                          |   request và chuyển đến
+     |                          |   ProductService
+     |                          |
+     |                          |-- 5. ProductService thực hiện:
+     |                          |   - Tạo đối tượng Pageable
+     |                          |   - Gọi repository để lấy dữ liệu
+     |                          |   - Xử lý phân trang
+     |                          |
+     |                          |-- 6. ProductRepository thực hiện:
+     |                          |   - Truy vấn database
+     |                          |   - Lấy danh sách sản phẩm
+     |                          |   - Đếm tổng số sản phẩm
+     |                          |
+     |<-- 7. Trả về response    |
+     |   chứa:                   |
+     |   - Danh sách sản phẩm    |
+     |   - Thông tin phân trang  |
+     |   - Tổng số sản phẩm      |
+     |                          |
+     |-- 8. Hook cập nhật state |
+     |   với dữ liệu mới        |
+     |                          |
+     |-- 9. Component render    |
+     |   lại UI với dữ liệu mới |
+     |   - Hiển thị sản phẩm    |
+     |   - Hiển thị phân trang  |
+     |   - Hiển thị tổng số     |
 ```
 
-2. Service xử lý logic:
-```java
-@Service
-public class AuthService {
-    public JwtResponse login(LoginRequest request) {
-        // Xác thực user
-        // Tạo JWT token
-        // Trả về response
-    }
-}
+### 3. Luồng Mua Hàng
+```
+[Frontend]                    [Backend]
+     |                            |
+     |-- 1. Người dùng thêm      |
+     |   sản phẩm vào giỏ hàng:  |
+     |   - Click nút "Thêm vào   |
+     |     giỏ"                  |
+     |   - Chọn số lượng         |
+     |                          |
+     |-- 2. CartContext cập nhật |
+     |   state giỏ hàng:         |
+     |   - Thêm sản phẩm mới     |
+     |   - Cập nhật số lượng     |
+     |   - Tính tổng tiền        |
+     |                          |
+     |-- 3. Người dùng click     |
+     |   "Thanh toán"            |
+     |                          |
+     |-- 4. Frontend kiểm tra:   |
+     |   - Đã đăng nhập chưa     |
+     |   - Giỏ hàng có sản phẩm  |
+     |   - Thông tin giao hàng   |
+     |                          |
+     |-- 5. Gửi request POST    |
+     |   đến /api/orders với    |
+     |   dữ liệu:               |
+     |   - Danh sách sản phẩm    |
+     |   - Thông tin giao hàng   |
+     |   - Tổng tiền            |
+     |                          |
+     |                          |-- 6. OrderController nhận
+     |                          |   request và chuyển đến
+     |                          |   OrderService
+     |                          |
+     |                          |-- 7. OrderService thực hiện:
+     |                          |   - Kiểm tra tồn kho
+     |                          |   - Tính toán giá
+     |                          |   - Tạo đơn hàng mới
+     |                          |   - Cập nhật số lượng
+     |                          |   - Gửi email xác nhận
+     |                          |
+     |                          |-- 8. OrderRepository lưu
+     |                          |   đơn hàng vào database
+     |                          |
+     |<-- 9. Trả về response    |
+     |   chứa:                   |
+     |   - Mã đơn hàng          |
+     |   - Thông tin đơn hàng    |
+     |   - Thông báo thành công  |
+     |                          |
+     |-- 10. Frontend hiển thị  |
+     |    thông báo thành công   |
+     |    và xóa giỏ hàng       |
+     |                          |
+     |-- 11. Chuyển hướng đến   |
+     |    trang chi tiết đơn hàng|
 ```
 
-3. JWT token được tạo và trả về cho client
-
-### 2. Xem Sản Phẩm
-
-#### Frontend
-1. Component gọi API lấy danh sách sản phẩm:
-```javascript
-// hooks/useProducts.js
-const useProducts = () => {
-  const [products, setProducts] = useState([]);
-  
-  const fetchProducts = async () => {
-    const response = await productService.getAll();
-    setProducts(response.data);
-  };
-  
-  return { products, fetchProducts };
-};
+### 4. Luồng Upload Ảnh
+```
+[Frontend]                    [Backend]
+     |                            |
+     |-- 1. Người dùng chọn      |
+     |   file ảnh thông qua      |
+     |   component FileInput      |
+     |                          |
+     |-- 2. Frontend kiểm tra:   |
+     |   - Định dạng file        |
+     |   - Kích thước file       |
+     |   - Hiển thị preview      |
+     |                          |
+     |-- 3. Khi người dùng       |
+     |   xác nhận upload:        |
+     |   - Tạo FormData object   |
+     |   - Thêm file vào FormData|
+     |   - Thêm metadata         |
+     |                          |
+     |-- 4. Gửi request POST    |
+     |   đến /api/upload với    |
+     |   FormData               |
+     |                          |
+     |                          |-- 5. FileController nhận
+     |                          |   request và chuyển đến
+     |                          |   FileService
+     |                          |
+     |                          |-- 6. FileService thực hiện:
+     |                          |   - Kiểm tra file
+     |                          |   - Tạo tên file unique
+     |                          |   - Nén ảnh nếu cần
+     |                          |   - Lưu file vào thư mục
+     |                          |   - Lưu metadata vào DB
+     |                          |
+     |<-- 7. Trả về response    |
+     |   chứa:                   |
+     |   - URL của ảnh          |
+     |   - Thông tin metadata    |
+     |                          |
+     |-- 8. Frontend cập nhật   |
+     |   UI với ảnh mới:        |
+     |   - Hiển thị ảnh preview |
+     |   - Cập nhật form        |
+     |   - Hiển thị thông báo   |
 ```
 
-2. Hiển thị sản phẩm sử dụng Material-UI:
-```javascript
-// components/ProductList.js
-const ProductList = () => {
-  const { products } = useProducts();
-  
-  return (
-    <Grid container>
-      {products.map(product => (
-        <ProductCard key={product.id} product={product} />
-      ))}
-    </Grid>
-  );
-};
+### 5. Luồng Tìm Kiếm và Lọc
+```
+[Frontend]                    [Backend]
+     |                            |
+     |-- 1. Người dùng nhập      |
+     |   từ khóa tìm kiếm        |
+     |                          |
+     |-- 2. Frontend xử lý:      |
+     |   - Debounce input        |
+     |   - Validate từ khóa      |
+     |   - Hiển thị loading      |
+     |                          |
+     |-- 3. Người dùng chọn      |
+     |   các bộ lọc:             |
+     |   - Giá tiền              |
+     |   - Hãng xe              |
+     |   - Năm sản xuất         |
+     |                          |
+     |-- 4. Gửi request GET     |
+     |   đến /api/products/search|
+     |   với query params:       |
+     |   - keyword: từ khóa     |
+     |   - filters: bộ lọc      |
+     |   - page: số trang       |
+     |                          |
+     |                          |-- 5. ProductController nhận
+     |                          |   request và chuyển đến
+     |                          |   ProductService
+     |                          |
+     |                          |-- 6. ProductService thực hiện:
+     |                          |   - Tạo điều kiện tìm kiếm
+     |                          |   - Áp dụng các bộ lọc
+     |                          |   - Gọi repository
+     |                          |
+     |                          |-- 7. ProductRepository thực hiện:
+     |                          |   - Tạo câu query động
+     |                          |   - Thực hiện tìm kiếm
+     |                          |   - Phân trang kết quả
+     |                          |
+     |<-- 8. Trả về response    |
+     |   chứa:                   |
+     |   - Danh sách kết quả    |
+     |   - Tổng số kết quả      |
+     |   - Thông tin phân trang  |
+     |                          |
+     |-- 9. Frontend cập nhật   |
+     |   UI:                     |
+     |   - Hiển thị kết quả     |
+     |   - Cập nhật phân trang  |
+     |   - Hiển thị số lượng    |
+     |     kết quả              |
 ```
 
-#### Backend
-1. Controller xử lý request:
-```java
-@GetMapping("/products")
-public ResponseEntity<?> getProducts(
-    @RequestParam(required = false) String search,
-    @RequestParam(required = false) String category
-) {
-    // Xử lý lấy danh sách sản phẩm
-}
-```
+Mỗi luồng xử lý trên đều được mô tả chi tiết từng bước, bao gồm:
+1. Các bước xử lý ở Frontend
+2. Các bước xử lý ở Backend
+3. Dữ liệu được truyền đi và nhận về
+4. Các component/service tham gia xử lý
+5. Các validation và kiểm tra
+6. Các thông báo và phản hồi
 
-2. Service thực hiện logic:
-```java
-@Service
-public class ProductService {
-    public Page<Product> getProducts(ProductFilter filter) {
-        // Lọc sản phẩm theo điều kiện
-        // Phân trang
-        // Trả về kết quả
-    }
-}
-```
-
-### 3. Mua Hàng
-
-#### Frontend
-1. Thêm vào giỏ hàng:
-```javascript
-// context/CartContext.js
-const addToCart = (product) => {
-  setCartItems(prev => [...prev, product]);
-};
-```
-
-2. Xử lý thanh toán:
-```javascript
-// services/orderService.js
-const createOrder = async (orderData) => {
-  const response = await axios.post('/api/orders', orderData);
-  return response.data;
-};
-```
-
-#### Backend
-1. Controller xử lý đơn hàng:
-```java
-@PostMapping("/orders")
-public ResponseEntity<?> createOrder(@Valid @RequestBody OrderRequest request) {
-    // Xử lý tạo đơn hàng
-}
-```
-
-2. Service xử lý logic:
-```java
-@Service
-public class OrderService {
-    @Transactional
-    public Order createOrder(OrderRequest request) {
-        // Validate đơn hàng
-        // Tạo đơn hàng mới
-        // Gửi email xác nhận
-        // Trả về kết quả
-    }
-}
-```
+Việc hiểu rõ các luồng xử lý này giúp:
+1. Dễ dàng debug khi có lỗi
+2. Biết được dữ liệu được xử lý ở đâu
+3. Hiểu được cách các component tương tác với nhau
+4. Biết được các điểm cần bảo mật
+5. Dễ dàng thêm tính năng mới
 
 ## Bảo Mật
 
