@@ -178,30 +178,30 @@ const Header = () => {
                     </li>
                   ) : (
                     cartItems.map((item, index) => (
-                      <li className="item" key={index}>
-                        <a className="product-image" href="#">
-                          <img src={item.picture} alt={item.productName} title={item.productName} />
-                        </a>
-                        <div className="product-details">
+                    <li className="item" key={index}>
+                      <a className="product-image" href="#">
+                        <img src={item.picture} alt={item.productName} title={item.productName} />
+                      </a>
+                      <div className="product-details">
                           <a href="#" className="remove" onClick={(e) => { e.preventDefault(); handleRemoveItem(item.productId); }}><i className="anm anm-times-l" aria-hidden="true"></i></a>
-                          <a href="#" className="edit-i remove"><i className="anm anm-edit" aria-hidden="true"></i></a>
-                          <a className="pName" href="/cart">{item.productName}</a>
-                          <div className="variant-cart"><span>{item.color}</span> / <span>{item.size}</span></div>
-                          <div className="wrapQtyBtn">
-                            <div className="qtyField">
-                              <span className="label">Qty:</span>
+                        <a href="#" className="edit-i remove"><i className="anm anm-edit" aria-hidden="true"></i></a>
+                        <a className="pName" href="/cart">{item.productName}</a>
+                        <div className="variant-cart"><span>{item.color}</span> / <span>{item.size}</span></div>
+                        <div className="wrapQtyBtn">
+                          <div className="qtyField">
+                            <span className="label">Qty:</span>
                               <a className="qtyBtn minus" href="#" onClick={(e) => { e.preventDefault(); handleQuantityChange(item.productId, item.quantity - 1); }}><i className="fa anm anm-minus-r" aria-hidden="true"></i></a>
                               <input type="text" id={`Quantity-${item.productId}`} name="quantity" value={item.quantity} className="product-form__input qty" readOnly />
                               <a className="qtyBtn plus" href="#" onClick={(e) => { e.preventDefault(); handleQuantityChange(item.productId, item.quantity + 1); }}><i className="fa anm anm-plus-r" aria-hidden="true"></i></a>
-                            </div>
-                          </div>
-                          <div className="priceRow">
-                            <div className="product-price">
+              </div>
+            </div>
+                        <div className="priceRow">
+                          <div className="product-price">
                               {item.price.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
-                            </div>
-                          </div>
-                        </div>
-                      </li>
+          </div>
+        </div>
+      </div>
+                    </li>
                     ))
                   )}
                 </ul>
@@ -216,12 +216,12 @@ const Header = () => {
                       Cart</RouterLink> <RouterLink to="/checkout" className="btn btn-secondary btn--small">Checkout</RouterLink>
                   </div>
                 </div>
-              </div>
+            </div>
             )}
           </div>
         </div>
       </nav>
-    </div>
+      </div>
   );
 };
 

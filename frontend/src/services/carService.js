@@ -44,7 +44,7 @@ const carService = {
             const response = await api.get('/api/products', { params: { name: searchTerm } });
             console.log('API Response for product search:', response);
             if (response.data) {
-                return response.data;
+            return response.data;
             } else {
                 console.warn(`API returned empty data for search term ${searchTerm}`);
                 return [];
@@ -88,6 +88,17 @@ const carService = {
                 console.error('Error response:', error.response.data);
                 console.error('Error status:', error.response.status);
             }
+            throw error;
+        }
+    },
+
+    // Lấy giỏ hàng của user
+    getCart: async () => {
+        try {
+            const response = await api.get('/api/cart');
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching cart:', error);
             throw error;
         }
     }

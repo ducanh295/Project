@@ -297,9 +297,9 @@ const Shop = () => {
                           </div>
                           <div className="product-price">
                             {product.priceOld && (
-                              <span className="old-price">${product.priceOld}</span>
+                              <span className="old-price">{parseFloat(product.priceOld).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                             )}
-                            <span className="price">${product.price}</span>
+                            <span className="price">{parseFloat(product.price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
                           </div>
                           <div className="product-review">
                             <i className="font-13 fa fa-star"></i>

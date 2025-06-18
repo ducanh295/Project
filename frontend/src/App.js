@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MainLayout from './components/layout/MainLayout';
@@ -37,6 +38,7 @@ function App() {
         theme="light"
       />
       <AuthProvider>
+      <CartProvider>
         <Routes>
           <Route path="/" element={
             <MainLayout showBanner>
@@ -100,6 +102,7 @@ function App() {
             </MainLayout>
           } />
         </Routes>
+      </CartProvider>
       </AuthProvider>
     </Router>
   );
