@@ -13,19 +13,14 @@ const api = axios.create({
 // Thêm interceptor để xử lý request
 api.interceptors.request.use(
     (config) => {
-        console.log('Making request to:', config.url);
-        // Lấy token từ localStorage
-        const token = localStorage.getItem('token');
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers['Authorization'] = `Bearer ${token}`;
+      }
+      return config;
     },
-    (error) => {
-        console.error('Request error:', error);
-        return Promise.reject(error);
-    }
-);
+    (error) => Promise.reject(error)
+  );
 
 // Thêm interceptor để xử lý response
 api.interceptors.response.use(

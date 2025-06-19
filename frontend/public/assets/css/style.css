@@ -192,7 +192,7 @@ nav {
 }
 
 .nav__logo a {
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 700;
   font-family: var(--header-font);
   color: var(--white);
@@ -207,6 +207,7 @@ nav {
 
 .nav__links {
   position: absolute;
+  font-size: 20px ;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -913,3 +914,86 @@ footer {
   }
 }
 
+.nav-treeview {
+  display: block !important;
+  padding-left: 1rem;
+}
+
+/* Sidebar menu text color white */
+.main-sidebar .nav-sidebar .nav-link p,
+.main-sidebar .nav-sidebar .nav-link {
+  color: #fff !important;
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.main-sidebar .nav-sidebar .nav-link {
+  padding: 12px 18px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.main-sidebar .nav-sidebar .nav-link .nav-icon {
+  color: #fff;
+  margin-right: 10px;
+  font-size: 1.2rem;
+}
+
+.main-sidebar .nav-sidebar .nav-link.active,
+.main-sidebar .nav-sidebar .nav-link[aria-expanded="true"] {
+  background: #2d3748;
+  color: #fff !important;
+}
+
+.main-sidebar .nav-sidebar .nav-link:hover,
+.main-sidebar .nav-sidebar .nav-link:focus {
+  background: #444;
+  color: #fff !important;
+}
+
+.main-sidebar .nav-treeview {
+  padding-left: 18px;
+  margin-bottom: 8px;
+  border-left: 2px solid #444;
+  transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1);
+}
+
+.main-sidebar .nav-treeview .nav-link {
+  background: transparent;
+  color: #e0e0e0 !important;
+  font-size: 0.98rem;
+  border-radius: 6px;
+  margin-bottom: 2px;
+  padding: 8px 16px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.main-sidebar .nav-treeview .nav-link:hover {
+  background: #3a4252;
+  color: #ffd700 !important;
+}
+
+.main-sidebar .user-panel .image img {
+  border: 2px solid #ffd700;
+}
+
+.main-sidebar .brand-link {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ffd700 !important;
+  letter-spacing: 0.03em;
+  background: #23272f;
+  border-radius: 0 0 8px 8px;
+  margin-bottom: 10px;
+}
+
+/* Hiệu ứng xổ menu */
+.main-sidebar .nav-treeview {
+  overflow: hidden;
+  max-height: 1000px;
+  transition: max-height 0.3s cubic-bezier(0.4,0,0.2,1);
+}

@@ -92,11 +92,16 @@ const carService = {
         }
     },
 
-    // Lấy giỏ hàng của user
+    // Lấy giỏ hàng của người dùng
     getCart: async () => {
         try {
             const response = await api.get('/api/cart');
-            return response.data;
+            if (response.data) {
+                return response.data;
+            } else {
+                console.warn('API returned empty cart data');
+                return [];
+            }
         } catch (error) {
             console.error('Error fetching cart:', error);
             throw error;

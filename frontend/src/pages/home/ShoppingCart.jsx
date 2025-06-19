@@ -101,22 +101,21 @@ const ShoppingCart = () => {
 
   const handleUpdateCart = async (e) => {
     e.preventDefault();
-    // Logic để lấy tất cả productIds và quantities từ cartItems và gửi lên API
-    const productIds = cartItems.map(item => item.productId);
-    const quantities = cartItems.map(item => item.quantity);
-
+    if (!user) {
+      alert('Bạn cần đăng nhập để cập nhật giỏ hàng.');
+      navigate('/login');
+      return;
+    }
     try {
-      if (!user) {
-        alert('Bạn cần đăng nhập để cập nhật giỏ hàng.');
-        navigate('/login');
-        return;
+      // Lặp qua từng sản phẩm và gọi API cập nhật từng sản phẩm
+      for (const item of cartItems) {
+        await api.put(`/api/cart/update`, null, {
+          params: {
+            productId: item.productId,
+            quantity: item.quantity
+          }
+        });
       }
-      await api.post(`/api/cart/update`, null, {
-        params: {
-          productIds: productIds,
-          quantities: quantities
-        }
-      });
       alert('Giỏ hàng đã được cập nhật!');
       fetchCartItems();
     } catch (err) {

@@ -59,9 +59,7 @@
         .custom-file-upload:hover {
             background-color: #f0f0f0;
         }
-        input[type="file"] {
-            display: none;
-        }
+        
         .avatar-name-placeholder {
             font-size: 22px;
             font-weight: 500;

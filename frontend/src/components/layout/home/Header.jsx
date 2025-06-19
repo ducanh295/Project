@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import api from '../../services/api';
+import { useAuth } from '../../../context/AuthContext';
+import api from '../../../services/api';
 
 const Header = () => {
   const { user, logout } = useAuth();
@@ -140,11 +140,11 @@ const Header = () => {
                       </li>
                       <li>
                         <span className="material-icons icons-size">call</span>
-                        <a href="/contact">Contact</a>
+                        <a href="/contact-us">Contact</a>
                       </li>
                       <li>
                         <span className="material-icons icons-size">insert_comment</span>
-                        <a href="/about">About us</a>
+                        <a href="/about-us">About us</a>
                       </li>
                       <li>
                         <span className="material-icons icons-size">logout</span>

@@ -4342,7 +4342,7 @@ input[type="button"].btn-block {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  color: #495057;
+  color: #fff;
   background-color: #fff;
   border-color: #dee2e6 #dee2e6 #fff;
 }
@@ -4410,6 +4410,17 @@ input[type="button"].btn-block {
   align-items: center;
   -ms-flex-pack: justify;
   justify-content: space-between;
+}
+/* Đổi màu chữ sidebar admin thành trắng */
+.main-sidebar .nav-sidebar .nav-link p,
+.main-sidebar .nav-sidebar .nav-link {
+  color: #fff !important;
+}
+
+/* Nếu muốn đổi màu khi hover hoặc active, có thể thêm: */
+.main-sidebar .nav-sidebar .nav-link:hover,
+.main-sidebar .nav-sidebar .nav-link.active {
+  color: #fff !important;
 }
 
 .navbar-brand {

@@ -51,6 +51,7 @@ public class WebConfigSecurity {
 			.authorizeHttpRequests(auth -> {
 				auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
 				auth.requestMatchers("/api/login", "/api/register", "/api/products/**", "/api/categories/**", "/api/forgot-password", "/api/reset-password", "/api/user/update-profile", "/uploads/**", "/logout").permitAll();
+				auth.requestMatchers("/api/admin/**").hasRole("ADMIN");
 				auth.anyRequest().authenticated();
 			})
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -71,5 +72,17 @@ public class WebConfigSecurity {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
+	}
+
+	@Bean
+	public CorsFilter corsFilter() {
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);
+		config.addAllowedOrigin("http://localhost:3000");
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
+		source.registerCorsConfiguration("/**", config);
+		return new CorsFilter(source);
 	}
 }

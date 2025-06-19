@@ -174,7 +174,7 @@ const ProfilePage = () => {
                 <label htmlFor="anhCaNhanInput" className="custom-file-upload">
                     Tải Ảnh Lên
                 </label>
-                <input type="file" id="anhCaNhanInput" ref={fileInputRef} name="anhCaNhan" accept="image/*" onChange={handleFileChange} />
+                <input type="file" id="anhCaNhanInput" ref={fileInputRef} name="anhCaNhan" accept="image/*" onChange={handleFileChange} style={{ display: 'none' }} />
                 <div id="avatarNamePlaceholder" ref={avatarNamePlaceholderRef} className="avatar-name-placeholder"></div>
             </div>
 
