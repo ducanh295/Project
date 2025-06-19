@@ -668,3 +668,296 @@ Mỗi luồng trên đều có các bước xử lý riêng và được kết n
 2. Tối ưu hiệu suất hệ thống
 3. Thêm tính năng mới một cách có tổ chức
 4. Đảm bảo tính bảo mật của hệ thống 
+
+## Sơ Đồ Luồng Xử Lý & Vị Trí File Code
+
+### 1. Đăng Nhập
+```mermaid
+flowchart TD
+  A1[Login.jsx: Nhập thông tin]
+  A2[authService.js: Gửi login API]
+  A3[AuthController.java: Nhận request]
+  A4[AuthService.java: Xác thực user]
+  A5[JwtTokenProvider.java: Tạo JWT token]
+  A6[AuthController.java: Trả về token]
+  A7[AuthContext.js: Lưu token, chuyển hướng]
+  A1 --> A2 --> A3 --> A4 --> A5 --> A6 --> A7
+```
+**Đoạn code tiêu biểu:**
+- `frontend/src/pages/home/Login.jsx`
+  ```jsx
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    authService.login({ email, password })
+      .then(response => { /* ... */ });
+  }
+  ```
+- `frontend/src/services/authService.js`
+  ```js
+  export const login = (credentials) => axios.post('/api/auth/login', credentials);
+  ```
+- `backend/src/main/java/com/bkap/controller/AuthController.java`
+  ```java
+  @PostMapping("/login")
+  public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
+      return authService.login(request);
+  }
+  ```
+- `backend/src/main/java/com/bkap/services/AuthService.java`
+  ```java
+  public JwtResponse login(LoginRequest request) {
+      User user = userRepository.findByEmail(request.getEmail());
+      if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+          throw new BadCredentialsException("Sai thông tin đăng nhập");
+      }
+      String token = jwtTokenProvider.generateToken(user);
+      return new JwtResponse(token, user);
+  }
+  ```
+
+---
+
+### 2. Xem Sản Phẩm
+```mermaid
+flowchart TD
+  B1[ProductList.jsx: Gọi API lấy sản phẩm]
+  B2[productService.js: Gửi request]
+  B3[ProductController.java: Nhận request]
+  B4[ProductService.java: Lấy dữ liệu]
+  B5[ProductRepository.java: Truy vấn DB]
+  B6[ProductList.jsx: Render UI]
+  B1 --> B2 --> B3 --> B4 --> B5 --> B6
+```
+**Đoạn code tiêu biểu:**
+- `frontend/src/pages/home/ProductList.jsx`
+  ```jsx
+  useEffect(() => { fetchProducts(); }, []);
+  const fetchProducts = async () => {
+    const res = await productService.getAll();
+    setProducts(res.data);
+  }
+  ```
+- `frontend/src/services/productService.js`
+  ```js
+  export const getAll = () => axios.get('/api/products');
+  ```
+- `backend/src/main/java/com/bkap/controller/ProductController.java`
+  ```java
+  @GetMapping("/products")
+  public ResponseEntity<?> getProducts(...) {
+      return ResponseEntity.ok(productService.getProducts(...));
+  }
+  ```
+- `backend/src/main/java/com/bkap/services/ProductService.java`
+  ```java
+  public List<Product> getProducts(...) {
+      return productRepository.findAll(...);
+  }
+  ```
+
+---
+
+### 3. Mua Hàng
+```mermaid
+flowchart TD
+  C1[ProductDetail.jsx: Thêm vào giỏ]
+  C2[CartContext.js: Cập nhật giỏ]
+  C3[CartPage.jsx: Click thanh toán]
+  C4[bookingService.js: Gửi tạo đơn hàng]
+  C5[OrderController.java: Nhận request]
+  C6[OrderService.java: Xử lý đơn hàng]
+  C7[OrderRepository.java: Lưu DB]
+  C8[CartPage.jsx: Hiển thị thông báo, xóa giỏ]
+  C1 --> C2 --> C3 --> C4 --> C5 --> C6 --> C7 --> C8
+```
+**Đoạn code tiêu biểu:**
+- `frontend/src/context/CartContext.js`
+  ```js
+  const addToCart = (product) => setCartItems(prev => [...prev, product]);
+  ```
+- `frontend/src/pages/home/CartPage.jsx`
+  ```jsx
+  const handleCheckout = () => { bookingService.createOrder(cartItems).then(...); }
+  ```
+- `frontend/src/services/bookingService.js`
+  ```js
+  export const createOrder = (orderData) => axios.post('/api/orders', orderData);
+  ```
+- `backend/src/main/java/com/bkap/controller/OrderController.java`
+  ```java
+  @PostMapping("/orders")
+  public ResponseEntity<?> createOrder(@RequestBody OrderRequest req) {
+      return ResponseEntity.ok(orderService.createOrder(req));
+  }
+  ```
+- `backend/src/main/java/com/bkap/services/OrderService.java`
+  ```java
+  public Order createOrder(OrderRequest req) {
+      // Kiểm tra tồn kho, tính giá, lưu DB, gửi email
+      return orderRepository.save(order);
+  }
+  ```
+
+---
+
+### 4. Upload Ảnh
+```mermaid
+flowchart TD
+  D1[UploadComponent.jsx: Chọn file]
+  D2[uploadService.js: Gửi file]
+  D3[FileController.java: Nhận file]
+  D4[FileService.java: Lưu file]
+  D5[FileRepository.java: Lưu metadata]
+  D6[UploadComponent.jsx: Hiển thị ảnh]
+  D1 --> D2 --> D3 --> D4 --> D5 --> D6
+```
+**Đoạn code tiêu biểu:**
+- `frontend/src/components/UploadComponent.jsx`
+  ```jsx
+  const handleUpload = (file) => uploadService.upload(file).then(...);
+  ```
+- `frontend/src/services/uploadService.js`
+  ```js
+  export const upload = (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    return axios.post('/api/upload', formData);
+  }
+  ```
+- `backend/src/main/java/com/bkap/controller/FileController.java`
+  ```java
+  @PostMapping("/upload")
+  public ResponseEntity<?> upload(@RequestParam MultipartFile file) {
+      return ResponseEntity.ok(fileService.save(file));
+  }
+  ```
+- `backend/src/main/java/com/bkap/services/FileService.java`
+  ```java
+  public String save(MultipartFile file) {
+      // Lưu file vào thư mục uploads, trả về URL
+  }
+  ```
+
+---
+
+### 5. Tìm Kiếm & Lọc
+```mermaid
+flowchart TD
+  E1[SearchBar.jsx: Nhập từ khóa]
+  E2[productService.js: Gửi request]
+  E3[ProductController.java: Nhận request]
+  E4[ProductService.java: Xử lý tìm kiếm]
+  E5[ProductRepository.java: Truy vấn DB]
+  E6[ProductList.jsx: Render kết quả]
+  E1 --> E2 --> E3 --> E4 --> E5 --> E6
+```
+**Đoạn code tiêu biểu:**
+- `frontend/src/pages/home/ProductList.jsx`
+  ```jsx
+  const handleSearch = (keyword, filters) => productService.search(keyword, filters).then(...);
+  ```
+- `frontend/src/services/productService.js`
+  ```js
+  export const search = (keyword, filters) => axios.get('/api/products/search', { params: { keyword, ...filters } });
+  ```
+- `backend/src/main/java/com/bkap/controller/ProductController.java`
+  ```java
+  @GetMapping("/products/search")
+  public ResponseEntity<?> search(@RequestParam String keyword, ...) {
+      return ResponseEntity.ok(productService.search(keyword, ...));
+  }
+  ```
+- `backend/src/main/java/com/bkap/services/ProductService.java`
+  ```java
+  public List<Product> search(String keyword, ...) {
+      // Xây dựng query động, gọi repository
+  }
+  ```
+
+---
+
+### 6. Quản Lý Tài Khoản
+```mermaid
+flowchart TD
+  F1[ProfilePage.jsx: Xem/Cập nhật]
+  F2[userService.js: Gửi request]
+  F3[UserController.java: Nhận request]
+  F4[UserService.java: Xử lý logic]
+  F5[UserRepository.java: Truy vấn/cập nhật DB]
+  F6[ProfilePage.jsx: Render UI]
+  F1 --> F2 --> F3 --> F4 --> F5 --> F6
+```
+**Đoạn code tiêu biểu:**
+- `frontend/src/pages/home/ProfilePage.jsx`
+  ```jsx
+  useEffect(() => { userService.getProfile().then(res => setUser(res.data)); }, []);
+  ```
+- `frontend/src/services/userService.js`
+  ```js
+  export const getProfile = () => axios.get('/api/user/profile');
+  export const updateProfile = (data) => axios.put('/api/user/profile', data);
+  ```
+- `backend/src/main/java/com/bkap/controller/UserController.java`
+  ```java
+  @GetMapping("/user/profile")
+  public ResponseEntity<?> getProfile() { /* ... */ }
+  @PutMapping("/user/profile")
+  public ResponseEntity<?> updateProfile(@RequestBody UserRequest req) {
+      return ResponseEntity.ok(userService.updateProfile(req));
+  }
+  ```
+- `backend/src/main/java/com/bkap/services/UserService.java`
+  ```java
+  public User updateProfile(UserRequest req) {
+      // Validate, cập nhật DB
+      return userRepository.save(user);
+  }
+  ```
+
+---
+
+### 7. Xử Lý Lỗi
+```mermaid
+flowchart TD
+  G1[API.js: Gặp lỗi]
+  G2[GlobalExceptionHandler.java: Xử lý exception]
+  G3[ErrorResponse.java: Trả về lỗi]
+  G4[Login.jsx/ProductList.jsx: Hiển thị lỗi]
+  G1 --> G2 --> G3 --> G4
+```
+**Đoạn code tiêu biểu:**
+- `frontend/src/services/api.js`
+  ```js
+  axios.interceptors.response.use(
+    response => response,
+    error => {
+      toast.error(error.response?.data?.message || 'Có lỗi xảy ra!');
+      return Promise.reject(error);
+    }
+  );
+  ```
+- `backend/src/main/java/com/bkap/exception/GlobalExceptionHandler.java`
+  ```java
+  @ControllerAdvice
+  public class GlobalExceptionHandler {
+      @ExceptionHandler(Exception.class)
+      public ResponseEntity<?> handle(Exception ex) {
+          return ResponseEntity.status(500).body(new ErrorResponse(ex.getMessage()));
+      }
+  }
+  ```
+- `backend/src/main/java/com/bkap/response/ErrorResponse.java`
+  ```java
+  public class ErrorResponse {
+      private String message;
+      // ...
+  }
+  ```
+- `frontend/src/pages/home/Login.jsx`
+  ```jsx
+  toast.error(error.response?.data?.message || 'Có lỗi xảy ra!');
+  ```
+
+---
+
+**Mỗi sơ đồ minh họa rõ ràng từng bước, từng file và đoạn code tiêu biểu giúp bạn hình dung toàn bộ luồng xử lý của dự án.** 
