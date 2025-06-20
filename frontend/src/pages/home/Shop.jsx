@@ -3,6 +3,54 @@ import { Link as RouterLink } from 'react-router-dom';
 import carService from '../../services/carService';
 import categoryService from '../../services/categoryService';
 
+// Thêm component Carousel đơn giản
+const ShopCarousel = () => {
+  const images = [
+    '/assets/images/saleoff-01.png',
+    '/assets/images/saleoff-02.png',
+  ];
+  const [current, setCurrent] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % images.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, [images.length]);
+  return (
+    <div className="shop-carousel" style={{ position: 'relative',padding: '0 10px'  ,width: '100%', maxWidth: '100%', margin: '0 auto 50px auto', overflow: 'hidden', borderRadius: '30px', boxShadow: '0 4px 24px 0 rgba(0,0,0,0.10)' }}>
+      {images.map((src, idx) => (
+        <img
+          key={src}
+          src={src}
+          alt={`Sale banner ${idx+1}`}
+          style={{
+            width: '100%',
+            height: '400px',
+            objectFit: 'cover',
+            display: idx === current ? 'block' : 'none',
+            transition: 'opacity 0.5s',
+          }}
+        />
+      ))}
+      <button
+        onClick={() => setCurrent((current - 1 + images.length) % images.length)}
+        style={{ position: 'absolute', top: '50%', left: 10, transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.3)', color: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, fontSize: 22, cursor: 'pointer', zIndex: 2 }}
+        aria-label="Previous"
+      >&#8592;</button>
+      <button
+        onClick={() => setCurrent((current + 1) % images.length)}
+        style={{ position: 'absolute', top: '50%', right: 10, transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.3)', color: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, fontSize: 22, cursor: 'pointer', zIndex: 2 }}
+        aria-label="Next"
+      >&#8594;</button>
+      <div style={{ position: 'absolute', bottom: 10, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 8 }}>
+        {images.map((_, idx) => (
+          <span key={idx} style={{ width: 10, height: 10, borderRadius: '50%', background: idx === current ? '#f5b754' : '#fff', border: '1.5px solid #f5b754', display: 'inline-block', transition: 'background 0.3s' }} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const Shop = () => {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
@@ -11,6 +59,8 @@ const Shop = () => {
   const [openCategories, setOpenCategories] = useState({});
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 8;
 
   const handleCategoryToggle = (categoryId) => {
     setOpenCategories(prevState => ({
@@ -112,6 +162,16 @@ const Shop = () => {
   console.log('Rendering Shop component - Categories:', categories);
   console.log('Rendering Shop component - Products:', products);
 
+  // Tính toán phân trang
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  const handlePageChange = (page) => {
+    if (page >= 1 && page <= totalPages) setCurrentPage(page);
+  };
+
   if (loading) {
     return <div className="text-center p-5">Loading...</div>;
   }
@@ -122,15 +182,8 @@ const Shop = () => {
 
   return (
     <div>
-      <div className="collection-header">
-        <div className="collection-hero">
-          <div className="collection-hero__image"></div>
-          <div>
-            <h1 className="collection-hero__title page-width" style={{ color: '#000' }}>Our Product Collection</h1>
-          </div>
-        </div>
-      </div>
-
+      {/* Carousel Saleoff - Đặt lên đầu, loại bỏ collection-header */}
+      <ShopCarousel />
       <div id="page-content">
         <div className="container-fluid">
           <div className="row">
@@ -246,8 +299,8 @@ const Shop = () => {
                 </div>
                 <div className="grid-products grid--view-items">
                   <div className="row">
-                    {Array.isArray(products) && products.map((product, index) => (
-                      <div className="col-6 col-sm-6 col-md-4 col-lg-3 item" key={index}>
+                    {Array.isArray(currentProducts) && currentProducts.map((product, index) => (
+                      <div className="col-6 col-sm-6 col-md-3 col-lg-3 item" key={index}>
                         <div className="product-image">
                           <RouterLink to={`/shop/chi-tiet/${product.productId}`}>
                             <img
@@ -323,6 +376,24 @@ const Shop = () => {
                     ))}
                   </div>
                 </div>
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <nav className="d-flex justify-content-center mt-4">
+                    <ul className="pagination shop-pagination">
+                      <li className={`page-item${currentPage === 1 ? ' disabled' : ''}`}>
+                        <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>&laquo;</button>
+                      </li>
+                      {Array.from({ length: totalPages }, (_, i) => (
+                        <li key={i + 1} className={`page-item${currentPage === i + 1 ? ' active' : ''}`}>
+                          <button className="page-link" onClick={() => handlePageChange(i + 1)}>{i + 1}</button>
+                        </li>
+                      ))}
+                      <li className={`page-item${currentPage === totalPages ? ' disabled' : ''}`}>
+                        <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>&raquo;</button>
+                      </li>
+                    </ul>
+                  </nav>
+                )}
               </div>
             </div>
           </div>

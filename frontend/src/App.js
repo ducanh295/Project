@@ -56,64 +56,64 @@ function App() {
         theme="light"
       />
       <AuthProvider>
-        <CartProvider>
-          <Routes>
-            <Route path="/" element={
-              <MainLayout showBanner>
-                <Home />
-              </MainLayout>
-            } />
-            <Route path="/about-us" element={
-              <MainLayout >
-                <About />
-              </MainLayout>
-            } />
-
-            <Route path="/contact-us" element={
-              <MainLayout >
-                <Contact />
-              </MainLayout>
-            } />
-            <Route path="/login" element={
-              <MainLayout>
-                <Login />
-              </MainLayout>
-            } />
-            <Route path="/register" element={
-              <MainLayout>
-                <Register />
-              </MainLayout>
-            } />
-            <Route path="/forgot-password" element={
-              <MainLayout>
-                <ForgotPasswordPage />
-              </MainLayout>
-            } />
-            <Route path="/reset-password" element={
-              <MainLayout>
-                <ResetPasswordPage />
-              </MainLayout>
-            } />
-            <Route path="/profile" element={
-              <MainLayout>
-                <ProfilePage />
-              </MainLayout>
-            } />
-            <Route path="/shop/chi-tiet/:productId" element={
-              <MainLayout>
-                <Detail />
-              </MainLayout>
-            } />
-            <Route path="/shop" element={
-              <MainLayout>
-                <Shop />
-              </MainLayout>
-            } />
-            <Route path="/cart" element={
-              <MainLayout>
-                <ShoppingCart />
-              </MainLayout>
-            } />
+      <CartProvider>
+        <Routes>
+          <Route path="/" element={
+            <MainLayout showBanner>
+              <Home />
+            </MainLayout>
+          } />
+          <Route path="/about-us" element={
+            <MainLayout >
+              <About />
+            </MainLayout>
+          } />
+          
+          <Route path="/contact-us" element={
+            <MainLayout >
+              <Contact />
+            </MainLayout>
+          } />
+          <Route path="/login" element={
+            <MainLayout>
+              <Login />
+            </MainLayout>
+          } />
+          <Route path="/register" element={
+            <MainLayout>
+              <Register />
+            </MainLayout>
+          } />
+          <Route path="/forgot-password" element={
+            <MainLayout>
+              <ForgotPasswordPage />
+            </MainLayout>
+          } />
+          <Route path="/reset-password" element={
+            <MainLayout>
+              <ResetPasswordPage />
+            </MainLayout>
+          } />
+          <Route path="/profile" element={
+            <MainLayout>
+              <ProfilePage />
+            </MainLayout>
+          } />
+          <Route path="/shop/chi-tiet/:productId" element={
+            <MainLayout>
+              <Detail />
+            </MainLayout>
+          } />
+          <Route path="/shop" element={
+            <MainLayout>
+              <Shop />
+            </MainLayout>
+          } />
+          <Route path="/cart" element={
+            <MainLayout>
+              <ShoppingCart />
+            </MainLayout>
+          } />
             <Route path="/admin" element={<PrivateAdminRoute><Admin /></PrivateAdminRoute>} />
             <Route path="/admin/products" element={<PrivateAdminRoute><ListProduct /></PrivateAdminRoute>} />
             <Route path="/admin/products/create" element={<PrivateAdminRoute><CreateProduct /></PrivateAdminRoute>} />
@@ -123,13 +123,13 @@ function App() {
             <Route path="/admin/categories/create" element={<PrivateAdminRoute><CreateCategory /></PrivateAdminRoute>} />
             <Route path="/admin/categories/edit/:id" element={<PrivateAdminRoute><EditCategory /></PrivateAdminRoute>} />
             <Route path="/admin/categories/detail/:id" element={<PrivateAdminRoute><DetailCategory /></PrivateAdminRoute>} />
-            <Route path="*" element={
-              <MainLayout>
-                <NotFound />
-              </MainLayout>
-            } />
-          </Routes>
-        </CartProvider>
+          <Route path="*" element={
+            <MainLayout>
+              <NotFound />
+            </MainLayout>
+          } />
+        </Routes>
+      </CartProvider>
       </AuthProvider>
     </Router>
   );

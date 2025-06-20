@@ -13,28 +13,28 @@ const Home = () => {
           <img src="/assets/images/range-1.jpg" alt="range" />
           <div className="range__details">
             <h4>CARS</h4>
-            <a href="#"><i className="ri-arrow-right-line"></i></a>
+            <a href="/shop"><i className="ri-arrow-right-line"></i></a>
           </div>
         </div>
         <div className="range__card">
           <img src="/assets/images/range-2.jpg" alt="range" />
           <div className="range__details">
             <h4>SUVS</h4>
-            <a href="#"><i className="ri-arrow-right-line"></i></a>
+            <a href="/shop"><i className="ri-arrow-right-line"></i></a>
           </div>
         </div>
         <div className="range__card">
           <img src="/assets/images/range-3.jpg" alt="range" />
           <div className="range__details">
             <h4>VANS</h4>
-            <a href="#"><i className="ri-arrow-right-line"></i></a>
+            <a href="/shop"><i className="ri-arrow-right-line"></i></a>
           </div>
         </div>
         <div className="range__card">
           <img src="/assets/images/range-4.jpg" alt="range" />
           <div className="range__details">
             <h4>ELECTRIC</h4>
-            <a href="#"><i className="ri-arrow-right-line"></i></a>
+            <a href="/shop"><i className="ri-arrow-right-line"></i></a>
           </div>
         </div>
       </div>
@@ -56,7 +56,7 @@ const Home = () => {
           top-tier vehicles ready for rental.
         </p>
         <div className="location__btn">
-          <button className="btn">Find a Location</button>
+          <button className="btn"><a href="/contact-us" style={{color : '#fff'}}>Find a Location</a></button>
         </div>
       </div>
     </section>
@@ -191,8 +191,8 @@ const Home = () => {
           <div><span id="select-price">225</span> /day</div>
         </div>
         <div className="select__btns">
-          <button className="btn">View Details</button>
-          <button className="btn">Rent Now</button>
+          <button className="btn"><a href="/shop" style={{color : '#fff'}}>View Details</a></button>
+          <button className="btn"><a href="/shop" style={{color : '#fff'}}>Rent Now</a></button>
         </div>
       </form>
     </section>

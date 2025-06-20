@@ -81,32 +81,6 @@ const Sidebar = () => {
               )}
             </li>
             <hr />
-            {/* Quản lý danh sách tài khoản */}
-            <li className="nav-item">
-              <div className="nav-link" style={{ cursor: 'pointer' }} onClick={() => handleToggle('account')}>
-                <i className="nav-icon fas fa-tachometer-alt"></i>
-                <p>
-                  Quản lý danh sách tài khoản người dùng
-                  <i className={`right fas fa-angle-left${openMenus.account ? ' rotate-90' : ''}`}></i>
-                </p>
-              </div>
-              {openMenus.account && (
-                <ul className="nav nav-treeview">
-                  <li className="nav-item">
-                    <a href="/admin/accUser" className="nav-link">
-                      <i className="far fa-circle nav-icon"></i>
-                      <p>danh sách tài khoản</p>
-                    </a>
-                  </li>
-                  <li className="nav-item">
-                    <a href="#" className="nav-link">
-                      <i className="far fa-circle nav-icon"></i>
-                      <p>Thêm tài khoản</p>
-                    </a>
-                  </li>
-                </ul>
-              )}
-            </li>
           </ul>
         </nav>
       </div>

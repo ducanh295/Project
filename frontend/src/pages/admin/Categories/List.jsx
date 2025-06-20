@@ -11,6 +11,8 @@ const List = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState(""); // ""=all, "true"=còn hàng, "false"=hết hàng
 
   useEffect(() => {
     fetchCategories();
@@ -48,6 +50,31 @@ const List = () => {
   // Lọc danh mục cha
   const parentCategories = categories.filter(c => !c.parent);
 
+  // Hàm kiểm tra tên gần đúng (không phân biệt hoa thường, có thể dùng includes)
+  const matchName = (name, keyword) =>
+    name.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '').includes(
+      keyword.toLowerCase().normalize('NFD').replace(/\p{Diacritic}/gu, '')
+    );
+
+  // Lọc theo search và status cho cả cha và con
+  const filteredParents = parentCategories
+    .filter(parent => {
+      // Lọc theo tên cha hoặc tên con
+      const matchParent = matchName(parent.categoryName, search);
+      const matchAnyChild = (parent.subcategories || []).some(child => matchName(child.categoryName, search));
+      // Lọc theo status
+      const statusOk = statusFilter === "" || String(parent.status) === statusFilter;
+      return (search === "" || matchParent || matchAnyChild) && statusOk;
+    })
+    .map(parent => ({
+      ...parent,
+      subcategories: (parent.subcategories || []).filter(child => {
+        const matchChild = matchName(child.categoryName, search);
+        const statusOk = statusFilter === "" || String(child.status) === statusFilter;
+        return (search === "" || matchChild) && statusOk;
+      })
+    }));
+
   return (
     <div>
       <Navbar />
@@ -60,6 +87,29 @@ const List = () => {
               <Link to="/admin/categories/create" className="btn btn-primary">Thêm mới Danh mục con</Link>
             </div>
             <div className="card-body">
+              {/* Bộ lọc tìm kiếm và status */}
+              <div className="row mb-3">
+                <div className="col-md-6">
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Tìm kiếm tên danh mục..."
+                    value={search}
+                    onChange={e => setSearch(e.target.value)}
+                  />
+                </div>
+                <div className="col-md-3">
+                  <select
+                    className="form-control"
+                    value={statusFilter}
+                    onChange={e => setStatusFilter(e.target.value)}
+                  >
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option value="true">Còn hàng</option>
+                    <option value="false">Hết hàng</option>
+                  </select>
+                </div>
+              </div>
               <table className="table table-bordered mt-2">
                 <thead>
                   <tr>
@@ -70,12 +120,12 @@ const List = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {parentCategories.length === 0 && (
+                  {filteredParents.length === 0 && (
                     <tr>
-                      <td colSpan="4" className="text-center">Không có danh mục gốc nào để hiển thị.</td>
+                      <td colSpan="4" className="text-center">Không có danh mục phù hợp.</td>
                     </tr>
                   )}
-                  {parentCategories.map(parent => (
+                  {filteredParents.map(parent => (
                     <React.Fragment key={parent.categoryId}>
                       <tr style={{ backgroundColor: '#f0f0f0' }}>
                         <td>{parent.categoryId}</td>
